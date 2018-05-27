@@ -1,7 +1,7 @@
 # ndg-0418
 fsm
 
-17/05/2018: check
+27/05/2018: check
 
 - what-next? (inverse matrix)
 
