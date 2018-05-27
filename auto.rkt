@@ -1,5 +1,5 @@
 #lang racket
-(require racket/hash)
+(require racket/hash "cons.rkt")
 (provide (all-defined-out))
 
 (define (randomise probability)
@@ -178,7 +178,7 @@
    (list-ref PAYOFF-TABLE action1)
    action2))
 
-(define (interact au1 au2 rounds delta)
+(define (interact au1 au2)
   (match-define (automaton head1 body1) au1)
   (match-define (automaton head2 body2) au2)
   (define-values (next1 next2 pay1 pay2 results)
@@ -187,7 +187,7 @@
                [payoff1 (hash-ref head1 'PAY)]
                [payoff2 (hash-ref head2 'PAY)]
                [results '()])
-              ([_ (in-range rounds)])
+              ([_ (in-list DELTAS)])
       (match-define (state action1 dispatch1) (hash-ref body1 current1))
       (match-define (state action2 dispatch2) (hash-ref body2 current2))
       (match-define (cons pay1 pay2) (payoff action1 action2))
@@ -195,8 +195,8 @@
       (define n2 (hash-ref dispatch2 action1))
       (define result (list pay1 pay2))
       (values n1 n2
-              (+ payoff1 (* (expt delta _) pay1))
-              (+ payoff2 (* (expt delta _) pay2))
+              (+ payoff1 (* _ pay1))
+              (+ payoff2 (* _ pay2))
               (cons result results))))
   (values 
    ;; (reverse results)
@@ -204,7 +204,7 @@
    (automaton (hash-set head2 'PAY (round5 pay2)) body2)))
 
     
-(define (interact-s au1 au2 rounds delta)
+(define (interact-s au1 au2)
   (match-define (automaton head1 body1) au1)
   (match-define (automaton head2 body2) au2)
   (define-values (next1 next2 pay1 pay2 results)
@@ -213,7 +213,7 @@
                [payoff1 (hash-ref head1 'PAY)]
                [payoff2 (hash-ref head2 'PAY)]
                [results '()])
-              ([_ (in-range rounds)])
+              ([_ (in-list DELTAS)])
       (match-define (state action1 dispatch1) (hash-ref body1 current1))
       (match-define (state action2 dispatch2) (hash-ref body2 current2))
       (match-define (cons pay1 pay2) (payoff action1 action2))
@@ -221,8 +221,8 @@
       (define n2 (hash-ref dispatch2 action1))
       (define result (list pay1 pay2))
       (values n1 n2
-              (+ payoff1 (* (expt delta _) pay1))
-              (+ payoff2 (* (expt delta _) pay2))
+              (+ payoff1 (* _ pay1))
+              (+ payoff2 (* _ pay2))
               (cons result results))))
   (values 
    (take (reverse results) 20)

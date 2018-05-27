@@ -1,22 +1,11 @@
 #lang racket
-(require "auto.rkt")
-(require "inout.rkt")
-(require plot)
-(require racket/hash)
+(require "auto.rkt" "inout.rkt" "cons.rkt")
+(require plot racket/hash)
 (plot-new-window? #t)
 ;;(require racket/future)
 (provide (all-defined-out))
 ;;todo
-;; markov automaton
-;; CONFIGURATION
-(define SIM-ID 3)
-
-(define N 100)
-(define CYCLES 100000)
-(define SPEED 10)
-(define ROUNDS 500)
-(define DELTA .99)
-(define MUTATION 2)
+;; fsm
 
 (define (build-random-population n)
   (build-vector n (lambda (_) (make-random-automaton 1))))
@@ -24,14 +13,14 @@
   (for/list
       ([auto population])
     (hash-ref (automaton-head auto) 'PAY)))
-(define (match-population population rounds delta)
+(define (match-population population)
   ;(population-reset population)
   (for
       ([i (in-range 0 (- (vector-length population) 1) 2)])
     (define auto1 (vector-ref population i))
     (define auto2 (vector-ref population (+ i 1)))
     (define-values (a1 a2)
-      (interact auto1 auto2 rounds delta))
+      (interact auto1 auto2))
     (vector-set! population i a1)
     (vector-set! population (+ i 1) a2))
   population)
@@ -122,7 +111,7 @@
               (population-mean->lines data))
         #:y-min 0 #:y-max (+ 5 high) #:width 1200 #:height 800))
 
-(define (plot-mean data delta rounds pic)
+(define (plot-mean data delta rounds pic tit)
   (define low (* 2 (compound delta rounds)))
   (define medium (* 5 (compound delta rounds)))
   (define high (* 8 (compound delta rounds)))
@@ -135,7 +124,7 @@
   (plot (list line1 line2 line3
               (population-mean->lines data))
         #:y-min 0 #:y-max (+ 5 high) #:width 1200 #:height 800
-        #:out-file pic))
+        #:out-file pic #:title tit))
 
 
 (define (sort-population p)
@@ -149,12 +138,12 @@
     (define auto (vector-ref population i))
     (vector-set! population i (mutate auto))))
 
-(define (evolve population cycles speed mutation rounds delta mean-file rank-file p-file sim-id)
+(define (evolve population cycles speed mutation mean-file rank-file p-file sim-id)
   (cond
     [(zero? cycles) (out-population sim-id (scan-f population) p-file)]
     [else
      (and (zero? (modulo cycles 100)) (print (number->string cycles)))
-     (define p2 (match-population population rounds delta))
+     (define p2 (match-population population))
 ;;     (print "matched\n")
      (define pp (population-payoffs p2))
   ;;   (print "pp-ed\n")
@@ -169,13 +158,13 @@
      (out-data mean-file (list (list (average pp))))
      ;;(print "out-meaned\n")
      (evolve p4 (- cycles 1)
-             speed mutation rounds delta mean-file rank-file p-file sim-id)]))
+             speed mutation mean-file rank-file p-file sim-id)]))
 
-(define (evolve-p population cycles speed mutation rounds delta)
+(define (evolve-p population cycles speed mutation)
   (cond
     [(zero? cycles) (list population)]
     [else
-     (define p2 (match-population population rounds delta))
+     (define p2 (match-population population))
      (define pp (population-payoffs p2))
      (define p3 (regenerate p2 speed))
      (define auto (vector-ref p3 0))
@@ -185,19 +174,30 @@
 ;;     (out-data mean-file (list (list (average pp))))
      (cons (average pp)
            (evolve-p (vector-map reset p3) (- cycles 1)
-                   speed mutation rounds delta))]))
+                   speed mutation))]))
 
-(define (gen-name name id)
-  (string-append (number->string id) name))
+(define (gen-name location id name)
+  (format "~a~a~a~a"
+	(if (= location 1) OUTLABstr "")
+          (number->string id) DELTAstr name))
+
+(define (gen-pic-title)
+  (format "ID = ~s, N = ~s, s = ~s, r = ~s, d = ~s, m = ~s" SIM-ID N SPEED ROUNDS DELTA MUTATION))
 
 (define (main)
   (collect-garbage)
-;;  (define A (build-random-population N))
-  (define data (csvfile->list "p"))
-  (define A (resurrect-p data))
-  (define MEAN (gen-name "mean" SIM-ID))
-  (define RANK (gen-name "rank" SIM-ID))
-  (time (evolve A CYCLES SPEED MUTATION ROUNDS DELTA MEAN RANK "p" SIM-ID))
+  (define POPU
+(gen-name LOCATION SIM-ID "p.txt"))
+	(define p-POPU (gen-name LOCATION (- SIM-ID 1) "p.txt"))
+  (define POPULATION
+    (if (= SIM-ID 1)
+        (build-random-population N)
+        (resurrect-p (csvfile->list p-POPU))))
+  (define MEAN (gen-name LOCATION SIM-ID "mean"))
+  (define RANK (gen-name LOCATION SIM-ID "rank"))
+  (time (evolve POPULATION CYCLES SPEED MUTATION MEAN RANK POPU SIM-ID))
   (define DATA (csvfile->list MEAN))
-  (define PIC (gen-name "pic.png" SIM-ID))
-  (plot-mean (input->numbers DATA) DELTA ROUNDS PIC))
+  (define PIC (gen-name LOCATION SIM-ID "pic.png"))
+  (define TIT (gen-pic-title))
+  (plot-mean (input->numbers DATA) DELTA ROUNDS PIC TIT))
+

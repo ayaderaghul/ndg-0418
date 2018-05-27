@@ -1,0 +1,7 @@
+digraph M {
+rankdir = LR
+M [peripheries = 2]
+
+M -> M [label = "L,M,H"]
+}
+

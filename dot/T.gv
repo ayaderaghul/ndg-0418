@@ -1,0 +1,12 @@
+digraph T {
+rankdir = LR
+
+C [peripheries = 2]
+
+C -> C [label = "C"]
+C -> D [label = "D"]
+
+D -> C [label = "C"]
+D -> D [label = "D"]
+}
+

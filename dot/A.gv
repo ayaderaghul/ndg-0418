@@ -1,0 +1,21 @@
+digraph A {
+rankdir = LR
+M [peripheries = 2]
+
+L -> L [label = "H"]
+L -> M [label = "M"]
+L -> H [label = "L"]
+
+M -> L [label = "H"]
+M -> M [label = "M"]
+M -> H [label = "L"]
+
+H -> L [label = "H"]
+H -> M [label = "M"]
+H -> H [label = "L"]
+}
+
+
+
+
+
