@@ -12,8 +12,8 @@
 (define (scan-for-LM pop)
   (define rank (scan pop))
   (list
-   (hash-ref rank (L))
-   (hash-ref rank (M))))
+   (hash-ref rank (L) 0)
+   (hash-ref rank (M) 0)))
 
 (define TESTS
   (list
@@ -58,8 +58,8 @@
 
 (define (main)
   (collect-garbage)
-  (for ([t (in-list TESTS)]
-        [i (in-naturals)])
-    (define pop (apply generate-population t))    
+  (for (;[t (in-list TESTS)]
+        [i (in-list (list 5 6 7 8 9 10 11))])
+    (define pop (apply generate-population (list-ref TESTS i)))    
     (evolve-t pop 800 10 (number->string i)))
   (plot-rep))
