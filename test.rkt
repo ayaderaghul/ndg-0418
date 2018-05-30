@@ -23,7 +23,7 @@
    
    (list 50 250)
    (list 50 350)
-   (list 300 300)
+   (list 400 200)
    
    (list 900 50)
    (list 800 150)
@@ -61,5 +61,5 @@
   (for ([t (in-list TESTS)]
         [i (in-naturals)])
     (define pop (apply generate-population t))    
-    (evolve-t pop 500 10 (number->string i)))
+    (evolve-t pop 800 10 (number->string i)))
   (plot-rep))

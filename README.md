@@ -18,3 +18,7 @@ no bc this one is deterministic?
 
 - pic has title? and export in png: gen-pic-name ->done
 affect: plot-mean: add tit
+
+30/05/2018: 
+
+- population comprises of all the same automaton: same payoff -> fitness calculation: division by zero
