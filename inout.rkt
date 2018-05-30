@@ -13,6 +13,10 @@
 (define (input->numbers data)
   (map string->number (flatten data)))
 
+(define (input->coors data)
+(for/list ([i (in-list data)])
+(map string->number i)))
+
 (define (get-position n ls)
   (define l (length ls))
   (define ls2
@@ -54,9 +58,6 @@
     (define d (map string->number b1))
     (resurrect-helper d)))
 
-  
-  
-
 (define (resurrect-ethnic string)
   (define z (first (string-split string "((")))
   (define a (string-split z ")"))
@@ -70,7 +71,7 @@
   (define a (drop (flatten data) 1))
   (define ethnics (map resurrect-ethnic a))
   (apply vector-append ethnics))
- 
+
 (define (resurrect-po data)
 (define ethnics (map resurrect-ethnic data))
 (apply vector-append ethnics)) 
