@@ -233,3 +233,18 @@
   (/ (round (* 100000 n))
      100000))
 
+;;benchmark
+
+(define (benchmark au)
+  (define-values (i1 i2) (interact au au))
+  (define-values (l1 l2) (interact au (L)))
+  (define-values (m1 m2) (interact au (M)))
+  (define-values (h1 h2) (interact au (H)))
+  (define-values (a1 a2) (interact au (A)))
+  (list
+   (hash-ref (automaton-head i1) 'PAY)
+   (hash-ref (automaton-head l1) 'PAY)
+   (hash-ref (automaton-head m1) 'PAY)
+   (hash-ref (automaton-head h1) 'PAY)
+   (hash-ref (automaton-head a1) 'PAY)))
+  

@@ -22,3 +22,9 @@ affect: plot-mean: add tit
 30/05/2018: 
 
 - population comprises of all the same automaton: same payoff -> fitness calculation: division by zero
+
+31/05/2018:
+
+- switch output name: 199pic to 991pic -> same delta pics stay next to each other
+
+- add benchmark: test with L M H A itself
