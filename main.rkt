@@ -179,7 +179,7 @@
 (define (gen-name location id name)
   (format "~a~a~a~a"
 	(if (= location 1) OUTLABstr "")
-          (number->string id) DELTAstr name))
+          DELTAstr (number->string id) name))
 
 (define (gen-pic-title)
   (format "ID = ~s, N = ~s, s = ~s, r = ~s, d = ~s, m = ~s" SIM-ID N SPEED ROUNDS DELTA MUTATION))
