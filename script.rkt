@@ -8,4 +8,7 @@
 (define dat2 (resurrect-n da))
 
 (define a (first dat))
+(define aus (map car dat2))
+(define num (map cdr dat2))
+
 

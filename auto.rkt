@@ -272,6 +272,43 @@
   (for/list ([i (in-list ls)])
     (benchmark i)))
 
+(define (reverse-matrix mat)
+  (define l (length mat))
+  (define (col x) (map (lambda (ls) (list-ref ls x)) mat))
+  (for/list ([i (in-range l)])
+    (col i)))
+   
+(define (print-row au)
+  (define row (benchmark au))
+  (define ls (map cdr row))
+  (define m (apply max ls))
+  (define (create-cell pair)
+    (if (= (cdr pair) m)
+        (format "~a*" (cdr pair))
+        (format "~a " (cdr pair))))
+  (define (cells pairs)
+    (for/list ([i (in-list pairs)])
+      (~a (create-cell i) #:min-width 7 #:align 'left)))
+  (cells row))
+
+(define (print-col au)
+  (define col (benchmark au))
+  (define ls (map car col))
+  (define m (apply max ls))
+  (define (create-cell pair)
+    (if (= (car pair) m)
+        (format "*~a " (car pair))
+        (format " ~a " (car pair))))
+  (define (cells pairs)
+    (for/list ([i (in-list pairs)])
+      (~a (create-cell i) #:min-width 8 #:align 'right)))
+  (cells col))
+  
+  
+  
+;;  (apply string-append (cells row)))
+ 
+    
 (define (interact-g au aus num)
   (define res
     (for/list ([i (in-list aus)]
@@ -284,7 +321,7 @@
    (/ (apply + (map cdr res)) 100)))
 
 (define (interact-g-r aus num au)
-  (define res (interact-g-r au aus num))
+  (define res (interact-g au aus num))
   (reverse-p res))
 
 (define (interact-g-itself aus num)

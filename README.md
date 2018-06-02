@@ -32,4 +32,6 @@ affect: plot-mean: add tit
 
 
 - interact-r: return pay only
-- create-matrix
+- create-matrix, print-matrix with solutions
+
+
