@@ -223,9 +223,9 @@
               (+ payoff1 (* _ pay1))
               (+ payoff2 (* _ pay2))
               (cons result results))))
-  (values 
+  (cons
    ;; (reverse results)
-(round5 pay1) (round5 pay2))) 
+(round1 pay1) (round1 pay2))) 
 
 (define (interact-s au1 au2)
   (match-define (automaton head1 body1) au1)
@@ -255,16 +255,68 @@
 (define (round5 n)
   (/ (round (* 100000 n))
      100000))
-
+(define (round1 n)
+  (/ (round (* 10 n))
+     10))
 ;;benchmark
 
+(define BENCHMARKS (list (L) (M) (H) (A)))
+
 (define (benchmark au)
-  (define-values (i1 i2) (interact-r au au))
-  (define-values (l1 l2) (interact-r au (L)))
-  (define-values (m1 m2) (interact-r au (M)))
-  (define-values (h1 h2) (interact-r au (H)))
-  (define-values (a1 a2) (interact-r au (A)))
-  (list i1 l1 m2 h1 a1))
+  (cons (interact-r au au)
+        (for/list ([i (in-list BENCHMARKS)])
+          (interact-r au i))))
 
+(define (create-matrix au)
+  (define ls (cons au BENCHMARKS))
+  (for/list ([i (in-list ls)])
+    (benchmark i)))
 
+(define (interact-g au aus num)
+  (define res
+    (for/list ([i (in-list aus)]
+               [j (in-list num)])
+      (cons
+       (* (car (interact-r au i)) j)
+       (* (cdr (interact-r au i)) j))))
+  (cons
+   (/ (apply + (map car res)) 100)
+   (/ (apply + (map cdr res)) 100)))
+
+(define (interact-g-r aus num au)
+  (define res (interact-g-r au aus num))
+  (reverse-p res))
+
+(define (interact-g-itself aus num)
+  (define res-m-h
+    (for/list ([i (in-list aus)]
+               [j (in-list num)])
+      (* j (car (interact-g i aus num)))))
+  (define res-m
+    (round5 (/ (apply + res-m-h) 100)))
+  (cons res-m res-m))
+
+(define (benchmark-m mix)
+  (define aus (map car mix))
+  (define num (map cdr mix))
+  (list
+   (interact-g-itself aus num)
+   (interact-g-r aus num (L))
+   (interact-g-r aus num (M))
+   (interact-g-r aus num (H))
+   (interact-g-r aus num (A))))
+
+(define (reverse-p pair)
+  (match-define (cons a b) pair)
+  (cons b a))
+  
+(define (create-matrix-m mix)
+  (define aus (map car mix))
+  (define num (map cdr mix))
+  (cons
+   (benchmark-m mix)
+   (for/list ([i (in-list BENCHMARKS)])
+     (cons (interact-g i aus num) (benchmark i)))))
+  
+  
   

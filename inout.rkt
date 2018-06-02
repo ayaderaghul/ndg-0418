@@ -58,6 +58,15 @@
     (define d (map string->number b1))
     (resurrect-helper d)))
 
+(define (resurrect-n automata)
+  (for/list ([i (in-list automata)])
+    (define z (first (string-split i "((" )))
+    (define a (string-split z ")" ))
+    (match-define (list b1 b2) (map string-split a))
+    (define d1 (map string->number b1))
+    (define d2 (string->number (second b2)))
+    (cons (resurrect-helper d1) d2)))
+
 (define (resurrect-ethnic string)
   (define z (first (string-split string "((")))
   (define a (string-split z ")"))
