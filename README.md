@@ -32,6 +32,10 @@ affect: plot-mean: add tit
 
 
 - interact-r: return pay only
-- create-matrix, print-matrix with solutions
+- create-matrix, print-matrix with solutions: done
 
+
+todos:
+
+- draw the machines w dot
 
