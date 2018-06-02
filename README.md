@@ -28,3 +28,7 @@ affect: plot-mean: add tit
 - switch output name: 199pic to 991pic -> same delta pics stay next to each other
 
 - add benchmark: test with L M H A itself
+
+
+
+- interact-r: return pay only

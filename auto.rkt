@@ -203,7 +203,30 @@
    (automaton (hash-set head1 'PAY (round5 pay1)) body1)
    (automaton (hash-set head2 'PAY (round5 pay2)) body2)))
 
-    
+(define (interact-r au1 au2)
+  (match-define (automaton head1 body1) au1)
+  (match-define (automaton head2 body2) au2)
+  (define-values (next1 next2 pay1 pay2 results)
+    (for/fold ([current1 (hash-ref head1 'INIT)]
+               [current2 (hash-ref head2 'INIT)]
+               [payoff1 (hash-ref head1 'PAY)]
+               [payoff2 (hash-ref head2 'PAY)]
+               [results '()])
+              ([_ (in-list DELTAS)])
+      (match-define (state action1 dispatch1) (hash-ref body1 current1))
+      (match-define (state action2 dispatch2) (hash-ref body2 current2))
+      (match-define (cons pay1 pay2) (payoff action1 action2))
+      (define n1 (hash-ref dispatch1 action2))
+      (define n2 (hash-ref dispatch2 action1))
+      (define result (list pay1 pay2))
+      (values n1 n2
+              (+ payoff1 (* _ pay1))
+              (+ payoff2 (* _ pay2))
+              (cons result results))))
+  (values 
+   ;; (reverse results)
+(round5 pay1) (round5 pay2))) 
+
 (define (interact-s au1 au2)
   (match-define (automaton head1 body1) au1)
   (match-define (automaton head2 body2) au2)
@@ -236,15 +259,12 @@
 ;;benchmark
 
 (define (benchmark au)
-  (define-values (i1 i2) (interact au au))
-  (define-values (l1 l2) (interact au (L)))
-  (define-values (m1 m2) (interact au (M)))
-  (define-values (h1 h2) (interact au (H)))
-  (define-values (a1 a2) (interact au (A)))
-  (list
-   (hash-ref (automaton-head i1) 'PAY)
-   (hash-ref (automaton-head l1) 'PAY)
-   (hash-ref (automaton-head m1) 'PAY)
-   (hash-ref (automaton-head h1) 'PAY)
-   (hash-ref (automaton-head a1) 'PAY)))
+  (define-values (i1 i2) (interact-r au au))
+  (define-values (l1 l2) (interact-r au (L)))
+  (define-values (m1 m2) (interact-r au (M)))
+  (define-values (h1 h2) (interact-r au (H)))
+  (define-values (a1 a2) (interact-r au (A)))
+  (list i1 l1 m2 h1 a1))
+
+
   
