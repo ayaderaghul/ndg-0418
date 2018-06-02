@@ -267,49 +267,49 @@
         (for/list ([i (in-list BENCHMARKS)])
           (interact-r au i))))
 
+(define (interact-g au aus)
+  (for/list ([i (in-list aus)])
+    (interact-r au i)))
+
 (define (create-matrix au)
   (define ls (cons au BENCHMARKS))
   (for/list ([i (in-list ls)])
-    (benchmark i)))
+    (interact-g i ls)))
 
 (define (reverse-matrix mat)
   (define l (length mat))
   (define (col x) (map (lambda (ls) (list-ref ls x)) mat))
   (for/list ([i (in-range l)])
     (col i)))
-   
-(define (print-row au)
-  (define row (benchmark au))
-  (define ls (map cdr row))
-  (define m (apply max ls))
-  (define (create-cell pair)
-    (if (= (cdr pair) m)
-        (format "~a*" (cdr pair))
-        (format "~a " (cdr pair))))
-  (define (cells pairs)
-    (for/list ([i (in-list pairs)])
-      (~a (create-cell i) #:min-width 7 #:align 'left)))
-  (cells row))
 
-(define (print-col au)
-  (define col (benchmark au))
-  (define ls (map car col))
-  (define m (apply max ls))
-  (define (create-cell pair)
-    (if (= (car pair) m)
-        (format "*~a " (car pair))
-        (format " ~a " (car pair))))
-  (define (cells pairs)
-    (for/list ([i (in-list pairs)])
-      (~a (create-cell i) #:min-width 8 #:align 'right)))
-  (cells col))
+(define (create-cell pair m-r m-c)
+  (match-define (cons p1 p2) pair)
+  (if (= p2 m-r)
+      (if (= p1 m-c)
+          (format "*~a ~a*" p1 p2)
+          (format " ~a ~a*" p1 p2))
+      (if (= p1 m-c)
+          (format "*~a ~a " p1 p2)
+          (format " ~a ~a " p1 p2))))
+
+(define (create-row pairs m-r m-c-s)
+  (for/list ([i (in-list pairs)]
+             [m-c (in-list m-c-s)])
+    (~a (create-cell i m-r m-c) #:min-width 15 #:align 'center)))
   
-  
-  
-;;  (apply string-append (cells row)))
- 
-    
-(define (interact-g au aus num)
+(define (print-matrix mat)
+  (define r (length mat))
+  (define c (length (first mat)))
+  (define ms 
+    (for/list ([row (in-list mat)])
+      (define ls (map cdr row))
+      (define m (apply max ls))
+      m))
+  (for/list ([i (in-list mat)]
+             [m-r (in-list ms)])
+    (apply string-append (create-row i m-r ms))))
+
+(define (interact-m au aus num)
   (define res
     (for/list ([i (in-list aus)]
                [j (in-list num)])
@@ -317,31 +317,31 @@
        (* (car (interact-r au i)) j)
        (* (cdr (interact-r au i)) j))))
   (cons
-   (/ (apply + (map car res)) 100)
-   (/ (apply + (map cdr res)) 100)))
+   (round1 (/ (apply + (map car res)) 100))
+   (round1 (/ (apply + (map cdr res)) 100))))
 
-(define (interact-g-r aus num au)
-  (define res (interact-g au aus num))
+(define (interact-m-r aus num au)
+  (define res (interact-m au aus num))
   (reverse-p res))
 
-(define (interact-g-itself aus num)
+(define (interact-m-itself aus num)
   (define res-m-h
     (for/list ([i (in-list aus)]
                [j (in-list num)])
-      (* j (car (interact-g i aus num)))))
+      (* j (car (interact-m i aus num)))))
   (define res-m
-    (round5 (/ (apply + res-m-h) 100)))
+    (round1 (/ (apply + res-m-h) 100)))
   (cons res-m res-m))
 
 (define (benchmark-m mix)
   (define aus (map car mix))
   (define num (map cdr mix))
   (list
-   (interact-g-itself aus num)
-   (interact-g-r aus num (L))
-   (interact-g-r aus num (M))
-   (interact-g-r aus num (H))
-   (interact-g-r aus num (A))))
+   (interact-m-itself aus num)
+   (interact-m-r aus num (L))
+   (interact-m-r aus num (M))
+   (interact-m-r aus num (H))
+   (interact-m-r aus num (A))))
 
 (define (reverse-p pair)
   (match-define (cons a b) pair)
@@ -353,7 +353,8 @@
   (cons
    (benchmark-m mix)
    (for/list ([i (in-list BENCHMARKS)])
-     (cons (interact-g i aus num) (benchmark i)))))
+     (cons (interact-m i aus num)
+           (interact-g i BENCHMARKS)))))
   
   
   
