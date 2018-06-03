@@ -39,3 +39,5 @@ todos:
 
 - draw the machines w dot: done
 
+- invest at cycle x out of y
+
