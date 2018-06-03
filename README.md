@@ -37,5 +37,5 @@ affect: plot-mean: add tit
 
 todos:
 
-- draw the machines w dot
+- draw the machines w dot: done
 

@@ -1,0 +1,15 @@
+digraph 271 {
+rankdir = LR
+0 [peripheries = 2]
+
+0 [label = "M"]
+0 -> 0 [label = "L"]
+0 -> 0 [label = "M"]
+0 -> 1 [label = "H"]
+
+1 [label = "L"]
+1 -> 0 [label = "L"]
+1 -> 1 [label = "M"]
+1 -> 1 [label = "H"]
+
+}
