@@ -79,6 +79,18 @@
              (hash 0 (state 0 (hash 0 2 1 1 2 0))
                    1 (state 1 (hash 0 2 1 1 2 0))
                    2 (state 2 (hash 0 2 1 1 2 0)))))
+(define (S)
+(automaton
+ '#hash((PAY . 0) (INIT . 0))
+ (hash
+  1
+  (state 2 '#hash((1 . 1) (2 . 3) (0 . 2)))
+  3
+  (state 1 '#hash((1 . 3) (2 . 2) (0 . 1)))
+  2
+  (state 2 '#hash((1 . 1) (2 . 2) (0 . 2)))
+  0
+  (state 1 '#hash((1 . 1) (2 . 1) (0 . 1))))))
 
 
 ;; IMMUTABLE MUTATION
@@ -260,7 +272,7 @@
      10))
 ;;benchmark
 
-(define BENCHMARKS (list (L) (M) (H) (A)))
+(define BENCHMARKS (list (L) (M) (H) (A) (S)))
 
 (define (benchmark au)
   (cons (interact-r au au)
@@ -341,7 +353,8 @@
    (interact-m-r aus num (L))
    (interact-m-r aus num (M))
    (interact-m-r aus num (H))
-   (interact-m-r aus num (A))))
+   (interact-m-r aus num (A))
+   (interact-m-r aus num (S))))
 
 (define (reverse-p pair)
   (match-define (cons a b) pair)
