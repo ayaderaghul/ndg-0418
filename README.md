@@ -41,3 +41,6 @@ todos:
 
 - invest at cycle x out of y
 
+- plot-interval
+
+- print out report on simulation

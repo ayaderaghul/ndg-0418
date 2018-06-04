@@ -57,19 +57,13 @@
    [else 'other]))
    
    
-   
-   
-   
-   
-      
   
   
-  
-
+#|
 (define Me (csvfile->list "/home/chi/Downloads/ndg-0418-3/992mean"))
 
 (define (plot-interval from to pic tit)
   (define Mea (drop (take Me to) from))
   (define Mean (input->numbers Mea))
 (plot-mean-i Mean from to DELTA ROUNDS pic tit))
- 
+|#
