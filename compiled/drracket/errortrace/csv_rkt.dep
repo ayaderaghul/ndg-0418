@@ -1,0 +1,1 @@
+("6.12" ("c7c884efe3b6e591d6892e7066c1059c746c0202" . "3491ac0d041a89c85a3da80910823690d1230f4c") (collects #"errortrace" #"errortrace-key.rkt") (collects #"mzlib" #"contract.rkt") (collects #"mzlib" #"etc.rkt") (collects #"mzlib" #"string.rkt") (collects #"mzscheme" #"main.rkt") (collects #"srfi" #"13" #"string.rkt"))

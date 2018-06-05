@@ -25,6 +25,14 @@
       (equal? n j)))
   (length ls2))
 
+(define (get-posn-next-number ls)
+  (define l (length ls))
+  (define ls2
+    (for/list ([i (in-range 1 l)])
+      #:final (string->number (list-ref ls i))
+      (string->number (list-ref ls i))))
+  (length ls2))
+
 (define (population-at data cycle total)
   (define x (- total cycle))
   (define raw  (flatten data))
