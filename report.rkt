@@ -4,8 +4,7 @@
 
 (provide (all-defined-out))
 
-(define STEP 100000)
-
+(define STEP 10000)
 (define (report file-name)
   (define out (open-output-file file-name #:exists 'append))
   (fprintf out "REPORT\n")
@@ -42,5 +41,4 @@
   (read-input d)
   (close-output-port out))
          
-
 

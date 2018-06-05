@@ -55,9 +55,6 @@
         (benchmark-m dat)))
   (map car res))
 
-   
-  
-  
 #|
 (define Me (csvfile->list "/home/chi/Downloads/ndg-0418-3/992mean"))
 
