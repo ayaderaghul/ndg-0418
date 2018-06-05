@@ -64,5 +64,28 @@
               (mean->lines-i data from to))
         #:y-min 0 #:y-max (+ 5 high) #:width 1200 #:height 800
         #:out-file pic #:title tit))
-
-
+(define (pays->lines data label color)
+  (define coors
+    (for/list ([d (in-list data)]
+               [n (in-naturals)])
+      (list n d)))
+  (lines coors #:label label #:color color))
+(define (plot-pays wl tm th wa ta ts delta rounds pic tit)
+  (define low (* 2 (compound delta rounds)))
+  (define medium (* 5 (compound delta rounds)))
+  (define high (* 8 (compound delta rounds)))
+  (define line1
+    (function (lambda (x) low) #:color "blue"))
+  (define line2
+    (function (lambda (x) medium) #:color "green"))
+  (define line3
+    (function (lambda (x) high) #:color "red"))
+  (plot (list line1 line2 line3
+              (pays->lines wl "w low" 'red)
+              (pays->lines tm "t medium" 'green)
+              (pays->lines th "t high" 'yellow)
+              (pays->lines wa "w acc" 'blue)
+              (pays->lines ta "t acc" 'purple)
+              (pays->lines ts "t tough" 'black))
+        #:y-min 0 #:y-max (+ 5 high) #:width 1200 #:height 800
+        #:out-file pic #:title tit))

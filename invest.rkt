@@ -18,7 +18,7 @@
         (create-matrix-m dat)))
   (print-matrix mat))
 
-(define (invest-1 da)
+(define (invest-1 da file-name)
   (define l (length da))
   (define dat
     (if (= l 1)
@@ -28,6 +28,12 @@
     (if (= l 1)
         (benchmark (first dat))
         (benchmark-m dat)))
+  (define w-l (car (second res)))
+  (define to-m (cdr (third res)))
+  (define to-h (cdr (fourth res)))
+  (match-define (cons w-a to-a) (fifth res))
+  (define to-s (cdr (last res)))
+  (out-data file-name (list (list w-l to-m to-h w-a to-a to-s)))
   (define r (map cdr res))
   (define m (apply max r))
   (define (cell pair m)

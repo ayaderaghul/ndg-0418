@@ -45,3 +45,5 @@ todos:
 
 - print out report on simulation -> better reports
 
+- plot personality test
+

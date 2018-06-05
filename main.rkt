@@ -135,13 +135,6 @@
            (evolve-p (vector-map reset p3) (- cycles 1)
                    speed mutation))]))
 
-(define (gen-name location id name)
-  (format "~a~a~a~a"
-	(if (= location 1) OUTLABstr "")
-          DELTAstr (number->string id) name))
-
-(define (gen-pic-title)
-  (format "ID = ~s, N = ~s, s = ~s, r = ~s, d = ~s, m = ~s" SIM-ID N SPEED ROUNDS DELTA MUTATION))
 
 (define (main)
   (collect-garbage)

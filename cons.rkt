@@ -14,4 +14,24 @@
 
 (define DELTAS (build-list ROUNDS (lambda (x) (expt DELTA x))))
 
-(define OUTLABstr "/Users/linhchi.nguyen/Dropbox/ndg-0418/")
+(define OUTLABstr "/Users/linhchi.nguyen/Dropbox/ndg-0418-3/")
+
+(define (gen-out id)
+  (string-append "/Users/linhchi.nguyen/Dropbox/ndg-0418-3/"
+                 DELTAstr (number->string id)))
+(define (gen-outs id)
+  (string-append "/Users/linhchi.nguyen/Dropbox/ndg-0418-3/"
+                 DELTAstr (number->string id) "o"))
+;(define OUTFILE (gen-out 1))
+(define (gen-in id)
+  (string-append "/Users/linhchi.nguyen/Dropbox/ndg-0418-3/"
+                 DELTAstr (number->string id) "rank"))
+
+
+(define (gen-name location id name)
+  (format "~a~a~a~a"
+	(if (= location 1) OUTLABstr "")
+          DELTAstr (number->string id) name))
+
+(define (gen-pic-title)
+  (format "ID = ~s, N = ~s, s = ~s, r = ~s, d = ~s, m = ~s" SIM-ID N SPEED ROUNDS DELTA MUTATION))
